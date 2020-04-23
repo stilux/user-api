@@ -1,0 +1,13 @@
+# directories
+**/bin/
+**/obj/
+**/out/
+**/Postman/
+**/.git/
+
+# files
+.gitignore
+.dockerignore
+Dockerfile*
+**/appsettings.*.json
+**/appsettings.json

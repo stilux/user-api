@@ -1,0 +1,162 @@
+{
+	"info": {
+		"_postman_id": "7bb21556-48d9-4b34-bf8d-15eb6314c6a4",
+		"name": "User API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Добавление пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "42a6d208-4b7e-480f-b2da-3fc5779adf43",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"if (pm.response.to.have.status(201)) {",
+							"    try {",
+							"        var user = JSON.parse(responseBody);",
+							"        pm.collectionVariables.set(\"Id\", user.id);",
+							"    }",
+							"    catch (e) {",
+							"        console.log(e);",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"alex\",\n    \"firstname\": \"Александр\",\n    \"lastname\": \"Васильев\",\n    \"email\": \"test@test.ru\",\n    \"phone\": \"+79997002244\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}",
+					"host": [
+						"{{BaseUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение пользователя",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseUrl}}/{{Id}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"{{Id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Изменение пользователя",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": {{Id}},\n    \"username\": \"alex\",\n    \"firstname\": \"Александр\",\n    \"lastname\": \"Петров\",\n    \"email\": \"super-mail@test.ru\",\n    \"phone\": \"+79997002244\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/{{Id}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"{{Id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Удаление пользователя",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"alex\",\n    \"firstname\": \"Александр\",\n    \"lastname\": \"Васильев\",\n    \"email\": \"test@test.ru\",\n    \"phone\": \"+79997002244\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/{{Id}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"{{Id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "9e1d5686-6953-4e65-8c23-2bd54a52795d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d1471ddf-3d07-40b3-b528-0b40e96e64a0",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "9a45efa1-5d3b-406d-bca2-e1d15422659f",
+			"key": "BaseUrl",
+			"value": "http://arch.homework/otusapp/api/user",
+			"type": "string"
+		},
+		{
+			"id": "1501f035-0706-477f-a940-1e2e9e9a69af",
+			"key": "Id",
+			"value": 7,
+			"type": "number"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
