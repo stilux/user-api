@@ -1,0 +1,45 @@
+dataBase:  
+  image:
+    repository: "postgres:latest"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  server: "postgres"
+  port: 5432
+  dbName: "UserDb"
+  user: "api-user"
+  password: "Bz8~urjW"
+  volume: 
+    name: "db-volume"
+    resources:
+      storage: 1Gi
+      
+api:
+  image:
+    repository: "stilux/user-api"
+    pullPolicy: IfNotPresent
+  replicaCount: 2
+  configPath: "/app/config"
+  logLevel: "Information"
+  allowedHosts: "*"
+  
+service:
+  type: "NodePort"
+  port: 80
+
+ingress:
+  enabled: true
+  host: "arch.homework"
+  main:
+    annotations: 
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    paths: 
+      - "/otusapp($|/)(.*)"
+  swagger:
+    path: "/swagger"
+        
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80

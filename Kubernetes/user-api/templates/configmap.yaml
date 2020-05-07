@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "user-api.fullname" . }}
+  labels:
+    {{- include "user-api.selectorLabels" . | nindent 4 }}
+data:
+  DB_NAME: {{ .Values.dataBase.dbName }}  
+  appsettings.json: |-
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": {{ .Values.api.logLevel | quote }},
+          "Microsoft": "Warning",
+          "Microsoft.Hosting.Lifetime": "Information"
+        }
+      },
+      "AllowedHosts": {{ .Values.api.allowedHosts | quote }}
+    }

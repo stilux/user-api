@@ -1,0 +1,49 @@
+﻿apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "user-api.fullname" . }}
+  labels:
+    {{- include "user-api.labels" . | nindent 4 }}
+  annotations:    
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ include "user-api.fullname" . }}
+      labels:
+        {{- include "user-api.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: check-db-ready
+          image: {{ .Values.dataBase.image.repository }}
+          imagePullPolicy: {{ .Values.dataBase.image.pullPolicy }}
+          env:
+            - name: POSTGRES_HOST
+              value: {{ include "user-api.postgresFullname" . | quote }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.dataBase.port | quote }}
+          command:
+            - sh
+            - "-c"
+            - |
+              until pg_isready -h $POSTGRES_HOST  -p  $POSTGRES_PORT; 
+              do echo waiting for database; sleep 2; done;
+      containers:
+        - name: db-migration-job
+          image: {{ include "user-api.fullImageName" . }}
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          args: ["-m"]
+          volumeMounts:
+            - name: config-volume
+              mountPath: {{ .Values.api.configPath | quote }}
+              readOnly: true
+      volumes:
+        - name: config-volume
+          secret:
+            secretName: {{ include "user-api.fullname" . }}
+            items:
+              - key: appsettings.secrets.json
+                path: appsettings.json

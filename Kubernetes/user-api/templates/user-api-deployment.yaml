@@ -1,0 +1,113 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "user-api.fullname" . }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.api.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "user-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:    
+      labels:
+        {{- include "user-api.selectorLabels" . | nindent 8 }}        
+      annotations:
+        {{- include "user-api.configChangeDetection" . | nindent 8 }}
+    spec:      
+      containers:
+        - name: {{ .Chart.Name }}          
+          image: {{ include "user-api.fullImageName" . }}
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: {{ .Values.api.configPath | quote }}
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              port: {{ .Values.service.port }}
+              path: /
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              port: {{ .Values.service.port }}
+              path: /
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            timeoutSeconds: 2          
+      volumes:
+        - name: config-volume
+          projected:
+            sources:
+              - configMap:
+                  name: {{ include "user-api.fullname" . }}
+                  items:
+                    - key: appsettings.json
+                      path: appsettings.json
+              - secret:
+                  name: {{ include "user-api.fullname" . }}
+                  items:
+                    - key: appsettings.secrets.json
+                      path: appsettings.secrets.json
+                      
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "user-api.postgresFullname" . }}
+spec:
+  serviceName: {{ .Values.dataBase.server | quote }}
+  replicas: {{ .Values.dataBase.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "user-api.postgresSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "user-api.postgresSelectorLabels" . | nindent 8 }}
+      annotations:
+        {{- include "user-api.configChangeDetection" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.dataBase.server }}
+          image: {{ .Values.dataBase.image.repository }}
+          imagePullPolicy: {{ .Values.dataBase.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.dataBase.port }}
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "user-api.fullname" . }}
+                  key: DB_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "user-api.fullname" . }}
+                  key: DB_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "user-api.fullname" . }}
+                  key: DB_PASSWORD
+          volumeMounts:
+            - name: {{ .Values.dataBase.volume.name }}
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.dataBase.volume.name }}
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: {{ .Values.dataBase.volume.resources.storage }}

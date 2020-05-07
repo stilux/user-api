@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "7bb21556-48d9-4b34-bf8d-15eb6314c6a4",
+		"_postman_id": "533bbf3d-1612-45ec-9d67-7f16872d9104",
 		"name": "User API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "42a6d208-4b7e-480f-b2da-3fc5779adf43",
+						"id": "99c996de-e8b9-452a-b66d-5f17db1e4dc0",
 						"exec": [
 							"pm.test(\"Status code is 201\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -36,7 +36,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"alex\",\n    \"firstname\": \"Александр\",\n    \"lastname\": \"Васильев\",\n    \"email\": \"test@test.ru\",\n    \"phone\": \"+79997002244\"\n}",
+					"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"firstname\": \"{{$randomFirstName}}\",\n    \"lastname\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"{{$randomPhoneNumberExt}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -76,7 +76,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"id\": {{Id}},\n    \"username\": \"alex\",\n    \"firstname\": \"Александр\",\n    \"lastname\": \"Петров\",\n    \"email\": \"super-mail@test.ru\",\n    \"phone\": \"+79997002244\"\n}",
+					"raw": "{\n    \"id\": {{Id}},\n    \"username\": \"{{$randomUserName}}\",\n    \"firstname\": \"{{$randomFirstName}}\",\n    \"lastname\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"{{$randomPhoneNumberExt}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -100,15 +100,6 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"alex\",\n    \"firstname\": \"Александр\",\n    \"lastname\": \"Васильев\",\n    \"email\": \"test@test.ru\",\n    \"phone\": \"+79997002244\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "{{BaseUrl}}/{{Id}}",
 					"host": [
@@ -126,7 +117,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "9e1d5686-6953-4e65-8c23-2bd54a52795d",
+				"id": "65a7a7f9-fa2a-4280-ad16-b9922db5b5fb",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -136,7 +127,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "d1471ddf-3d07-40b3-b528-0b40e96e64a0",
+				"id": "42ba14a1-415c-48c5-9de2-9e6fe40e0fff",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -146,15 +137,15 @@
 	],
 	"variable": [
 		{
-			"id": "9a45efa1-5d3b-406d-bca2-e1d15422659f",
+			"id": "73de6dc8-a770-4eca-b2e6-9a19d4c6fcbd",
 			"key": "BaseUrl",
 			"value": "http://arch.homework/otusapp/api/user",
 			"type": "string"
 		},
 		{
-			"id": "1501f035-0706-477f-a940-1e2e9e9a69af",
+			"id": "be153de8-678d-4be3-9232-5bb73ed5cb80",
 			"key": "Id",
-			"value": 7,
+			"value": 23,
 			"type": "number"
 		}
 	],
