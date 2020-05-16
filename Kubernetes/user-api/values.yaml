@@ -1,17 +1,14 @@
-dataBase:  
+postgresql:
+  enabled: true
+  postgresqlUsername: "api-user"
+  postgresqlPassword: "Bz8~urjW"
+  postgresqlDatabase: "UserDb"
+  service:
+    port: "5432"
   image:
-    repository: "postgres:latest"
-    pullPolicy: IfNotPresent
-  replicaCount: 1
-  server: "postgres"
-  port: 5432
-  dbName: "UserDb"
-  user: "api-user"
-  password: "Bz8~urjW"
-  volume: 
-    name: "db-volume"
-    resources:
-      storage: 1Gi
+    tag: "latest"
+  persistence:
+    size: 1Gi      
       
 api:
   image:

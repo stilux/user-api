@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -57,57 +56,3 @@ spec:
                   items:
                     - key: appsettings.secrets.json
                       path: appsettings.secrets.json
-                      
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: {{ include "user-api.postgresFullname" . }}
-spec:
-  serviceName: {{ .Values.dataBase.server | quote }}
-  replicas: {{ .Values.dataBase.replicaCount }}
-  selector:
-    matchLabels:
-      {{- include "user-api.postgresSelectorLabels" . | nindent 6 }}
-  template:
-    metadata:
-      labels:
-        {{- include "user-api.postgresSelectorLabels" . | nindent 8 }}
-      annotations:
-        {{- include "user-api.configChangeDetection" . | nindent 8 }}
-    spec:
-      containers:
-        - name: {{ .Values.dataBase.server }}
-          image: {{ .Values.dataBase.image.repository }}
-          imagePullPolicy: {{ .Values.dataBase.image.pullPolicy }}
-          ports:
-            - containerPort: {{ .Values.dataBase.port }}
-          env:
-            - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "user-api.fullname" . }}
-                  key: DB_NAME
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "user-api.fullname" . }}
-                  key: DB_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "user-api.fullname" . }}
-                  key: DB_PASSWORD
-          volumeMounts:
-            - name: {{ .Values.dataBase.volume.name }}
-              mountPath: /var/lib/postgresql/data
-              subPath: postgres
-  volumeClaimTemplates:
-    - metadata:
-        name: {{ .Values.dataBase.volume.name }}
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        storageClassName: standard
-        resources:
-          requests:
-            storage: {{ .Values.dataBase.volume.resources.storage }}

@@ -18,18 +18,22 @@ spec:
       restartPolicy: Never
       initContainers:
         - name: check-db-ready
-          image: {{ .Values.dataBase.image.repository }}
-          imagePullPolicy: {{ .Values.dataBase.image.pullPolicy }}
+          image: {{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
+          imagePullPolicy: {{ .Values.postgresql.image.pullPolicy }}
           env:
             - name: POSTGRES_HOST
-              value: {{ include "user-api.postgresFullname" . | quote }}
+              value: {{ include "user-api.postgresqlFullname" . | quote }}
             - name: POSTGRES_PORT
-              value: {{ .Values.dataBase.port | quote }}
+              value: {{ .Values.postgresql.service.port | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.postgresql.postgresqlUsername }}
+            - name: POSTGRES_DATABASE
+              value: {{ .Values.postgresql.postgresqlDatabase }}
           command:
             - sh
             - "-c"
             - |
-              until pg_isready -h $POSTGRES_HOST  -p  $POSTGRES_PORT; 
+              until pg_isready -U $POSTGRES_USER -d $POSTGRES_DATABASE -h $POSTGRES_HOST -p $POSTGRES_PORT; 
               do echo waiting for database; sleep 2; done;
       containers:
         - name: db-migration-job
