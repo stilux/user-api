@@ -1,4 +1,3 @@
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,17 +13,3 @@ spec:
       name: http
   selector:
     {{- include "user-api.selectorLabels" . | nindent 4 }}  
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "user-api.postgresFullname" . }}
-  labels:
-    {{- include "user-api.labels" . | nindent 4 }}
-spec:
-  type: ClusterIP
-  ports:
-    - port: {{ .Values.dataBase.port }}
-  selector:
-    {{- include "user-api.postgresSelectorLabels" . | nindent 4 }}

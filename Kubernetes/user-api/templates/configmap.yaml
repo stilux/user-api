@@ -5,7 +5,6 @@ metadata:
   labels:
     {{- include "user-api.selectorLabels" . | nindent 4 }}
 data:
-  DB_NAME: {{ .Values.dataBase.dbName }}  
   appsettings.json: |-
     {
       "Logging": {

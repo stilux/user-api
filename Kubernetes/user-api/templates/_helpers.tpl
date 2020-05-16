@@ -64,16 +64,8 @@ checksum/config: {{ print $secret $configmap | sha256sum }}
 {{- end }}
 
 {{/*
-Create a fully qualified app name.
+Create postgresql fullname
 */}}
-{{- define "user-api.postgresFullname" -}}
-{{ printf "%s-%s" (include "user-api.fullname" . ) .Values.dataBase.server }}
-{{- end }}
-
-{{/*
-Postgres selector labels
-*/}}
-{{- define "user-api.postgresSelectorLabels" -}}
-app.kubernetes.io/name: {{ printf "%s-%s" (include "user-api.name" . ) .Values.dataBase.server }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
+{{- define "user-api.postgresqlFullname" -}}
+{{- printf "%s-%s" .Release.Name "postgresql" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
