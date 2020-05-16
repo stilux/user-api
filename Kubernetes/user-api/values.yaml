@@ -8,7 +8,14 @@ postgresql:
   image:
     tag: "latest"
   persistence:
-    size: 1Gi      
+    size: 1Gi 
+  metrics:
+    enabled: true    
+    serviceMonitor:
+      enabled: true      
+      namespace: monitoring
+      interval: 30s
+      scrapeTimeout: 10s
       
 api:
   image:
@@ -26,14 +33,12 @@ service:
 ingress:
   enabled: true
   host: "arch.homework"
-  main:
-    annotations: 
-      nginx.ingress.kubernetes.io/rewrite-target: /$2
+  main:   
     paths: 
-      - "/otusapp($|/)(.*)"
+      - "/otusapp"
   swagger:
     path: "/swagger"
-        
+    
 autoscaling:
   enabled: false
   minReplicas: 1

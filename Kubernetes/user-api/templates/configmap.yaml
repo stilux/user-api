@@ -1,10 +1,22 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-import-dashboards
+  labels:
+    grafana-dashboard: {{ include "user-api.name" . }}
+data:
+  user-api-dashboard.json: |
+    {{- .Files.Get "grafana/user-api-dashboard.json" | nindent 4 }}
+
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "user-api.fullname" . }}
   labels:
     {{- include "user-api.selectorLabels" . | nindent 4 }}
-data:
+data:   
   appsettings.json: |-
     {
       "Logging": {

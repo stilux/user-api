@@ -1,8 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine3.11 AS build
 WORKDIR /source
-COPY *.sln .
 COPY UserAPI/*.csproj ./UserAPI/
-RUN dotnet restore -r linux-musl-x64
+RUN dotnet restore -r linux-musl-x64 UserAPI
 
 COPY UserAPI/. ./UserAPI/
 WORKDIR /source/UserAPI

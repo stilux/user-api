@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 using Swashbuckle.AspNetCore.Swagger;
 using UserAPI.Filters;
 using UserAPI.Providers;
@@ -65,9 +66,14 @@ namespace UserAPI
             }
 
             app.UseRouting();
+            app.UseHttpMetrics();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapMetrics();
+            });
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>

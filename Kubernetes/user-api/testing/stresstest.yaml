@@ -1,0 +1,20 @@
+﻿﻿apiVersion: batch/v1
+kind: Job
+metadata:
+  name: user-api-stresstest 
+spec:
+  template:
+    metadata:
+      name: user-api-stresstest
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: user-api-test
+          image: stilux/user-api-test:latest
+          env:
+            - name: SERVICE_HOST
+              value: "nginx-nginx-ingress-controller"
+            - name: SERVICE_PORT
+              value: "80"
+          args: [--url=http://$(SERVICE_HOST):$(SERVICE_PORT)/otusapp/api/user, --host=arch.homework, --vuser=10, --delay=1500]            
+  backoffLimit: 0  

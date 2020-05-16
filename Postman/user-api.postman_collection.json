@@ -13,7 +13,7 @@
 					"script": {
 						"id": "99c996de-e8b9-452a-b66d-5f17db1e4dc0",
 						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
+							"pm.test(\"Add user\", function () {",
 							"    pm.response.to.have.status(201);",
 							"});",
 							"",
@@ -54,6 +54,20 @@
 		},
 		{
 			"name": "Получение пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ba879758-7371-4a13-8a74-e81d8a3cc6cd",
+						"exec": [
+							"pm.test(\"Get user\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -71,6 +85,20 @@
 		},
 		{
 			"name": "Изменение пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e82b27f6-f2a0-438d-b618-cb1e19a38316",
+						"exec": [
+							"pm.test(\"Update user\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -97,6 +125,21 @@
 		},
 		{
 			"name": "Удаление пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "03295074-5a72-4a0f-8f65-3f547ac34f23",
+						"exec": [
+							"pm.test(\"Delete user\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"    pm.collectionVariables.unset(\"Id\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -137,16 +180,10 @@
 	],
 	"variable": [
 		{
-			"id": "73de6dc8-a770-4eca-b2e6-9a19d4c6fcbd",
+			"id": "58013a89-d6a8-4250-ab94-e1492d481df0",
 			"key": "BaseUrl",
 			"value": "http://arch.homework/otusapp/api/user",
 			"type": "string"
-		},
-		{
-			"id": "be153de8-678d-4be3-9232-5bb73ed5cb80",
-			"key": "Id",
-			"value": 23,
-			"type": "number"
 		}
 	],
 	"protocolProfileBehavior": {}

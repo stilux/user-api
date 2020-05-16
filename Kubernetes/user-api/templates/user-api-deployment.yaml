@@ -1,7 +1,10 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "user-api.fullname" . }}
+  labels:
+    {{- include "user-api.selectorLabels" . | nindent 4 }}
 spec:
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.api.replicaCount }}
@@ -27,21 +30,7 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: {{ .Values.api.configPath | quote }}
-              readOnly: true
-          livenessProbe:
-            httpGet:
-              port: {{ .Values.service.port }}
-              path: /
-            initialDelaySeconds: 1
-            periodSeconds: 5
-            timeoutSeconds: 2
-          readinessProbe:
-            httpGet:
-              port: {{ .Values.service.port }}
-              path: /
-            initialDelaySeconds: 1
-            periodSeconds: 5
-            timeoutSeconds: 2          
+              readOnly: true                   
       volumes:
         - name: config-volume
           projected:
@@ -56,3 +45,23 @@ spec:
                   items:
                     - key: appsettings.secrets.json
                       path: appsettings.secrets.json
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "user-api.fullname" . }}
+  labels:
+    {{- include "user-api.labels" . | nindent 4 }}
+spec:
+  jobLabel: {{ include "user-api.fullname" . }}
+  namespaceSelector:
+    matchNames:
+      - "{{ $.Release.Namespace }}"
+  selector:
+    matchLabels:
+      {{- include "user-api.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - interval: 15s
+      port: web
+      path: /metrics

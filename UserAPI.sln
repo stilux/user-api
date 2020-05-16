@@ -6,7 +6,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{E2C663
 ProjectSection(SolutionItems) = preProject
 	.dockerignore = .dockerignore
 	Dockerfile = Dockerfile
+	UserAPI-Test = UserAPI-Test
 EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserAPI.Test", "UserAPI.Test\UserAPI.Test.csproj", "{40317FC4-13EA-4662-A600-EF8536F65A54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +21,9 @@ Global
 		{CF9CC72A-6736-432C-BEB8-73D522E913D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF9CC72A-6736-432C-BEB8-73D522E913D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF9CC72A-6736-432C-BEB8-73D522E913D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40317FC4-13EA-4662-A600-EF8536F65A54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40317FC4-13EA-4662-A600-EF8536F65A54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40317FC4-13EA-4662-A600-EF8536F65A54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40317FC4-13EA-4662-A600-EF8536F65A54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
